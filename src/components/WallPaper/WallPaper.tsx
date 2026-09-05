@@ -1,18 +1,12 @@
-import { useEffect } from 'react';
-import styles from './WallPaper.module.css';
+// import styles from './WallPaper.module.css';
+import Button from '../Button';
 
-function WallPaper() {
-  useEffect(() => {
-    function onMouseMove(event: MouseEvent) {
-      console.log({ x: event.clientX, y: event.clientY });
-    }
-    window.addEventListener('mousemove', onMouseMove);
+type Props = {
+  onShowContextMenu: () => void;
+};
 
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-    };
-  }, []);
-  return <button className={styles.button}>Hey!</button>;
+function WallPaper({ onShowContextMenu }: Props) {
+  return <Button onButtonClick={onShowContextMenu}>Hey</Button>;
 }
 
 export default WallPaper;

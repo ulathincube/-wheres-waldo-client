@@ -1,5 +1,8 @@
 :root {
-  --font-stack: sans-serif;
+  --font-stack: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+  --shadow-color: hsl(260deg 30% 10% / 0.25);
+  --shadow-medium: 2px 4px 4px var(--shadow-color);
+  --font-size: 1.3rem;
 }
 
 html,
@@ -9,6 +12,7 @@ body {
 
 body {
   font-family: var(--font-stack);
+  font-size: var(--font-size);
 }
 
 #root {

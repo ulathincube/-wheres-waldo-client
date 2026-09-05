@@ -1,0 +1,13 @@
+.wrapper {
+  box-shadow: var(--shadow-medium);
+  --position-x: 0px;
+  --position-y: 0px;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 20px;
+
+  position: absolute;
+  top: var(--position-y);
+  left: var(--position-x);
+}

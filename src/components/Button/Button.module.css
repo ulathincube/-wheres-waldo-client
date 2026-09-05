@@ -1,0 +1,7 @@
+.button {
+  flex: 1;
+  background-color: transparent;
+  font-family: inherit;
+  border: none;
+  font-size: inherit;
+}
