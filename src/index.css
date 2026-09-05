@@ -1,0 +1,17 @@
+:root {
+  --font-stack: sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-stack);
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+}
