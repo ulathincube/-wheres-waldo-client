@@ -5,7 +5,10 @@
   display: flex;
   flex-direction: column;
   list-style: none;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+  background-color: var(--hover-text);
 
   position: absolute;
   top: var(--position-y);

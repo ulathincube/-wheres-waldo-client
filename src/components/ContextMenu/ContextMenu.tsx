@@ -1,5 +1,6 @@
 import styles from './ContextMenu.module.css';
 import Button from '../Button';
+import { findCharacter } from '../../services/image';
 
 interface ContextStyles extends React.CSSProperties {
   '--position-x': string;
@@ -12,6 +13,15 @@ type Props = {
 };
 
 function ContextMenu({ onHideContextMenu, position }: Props) {
+  async function handleOptionClick(character: string) {
+    onHideContextMenu();
+    try {
+      const response = await findCharacter({ character, position, imageId: 1 });
+      console.log(response);
+    } catch (error) {
+      console.log({ error });
+    }
+  }
   return (
     <ul
       className={styles.wrapper}
@@ -23,13 +33,28 @@ function ContextMenu({ onHideContextMenu, position }: Props) {
       }
     >
       <li>
-        <Button onButtonClick={onHideContextMenu}>Option One</Button>
+        <Button
+          className='context'
+          onButtonClick={() => handleOptionClick('waldo')}
+        >
+          Option One
+        </Button>
       </li>
       <li>
-        <Button onButtonClick={onHideContextMenu}>Option Two</Button>
+        <Button
+          className='context'
+          onButtonClick={() => handleOptionClick('morty')}
+        >
+          Option Two
+        </Button>
       </li>
       <li>
-        <Button onButtonClick={onHideContextMenu}>Option Three</Button>
+        <Button
+          className='context'
+          onButtonClick={() => handleOptionClick('robocop')}
+        >
+          Option Three
+        </Button>
       </li>
     </ul>
   );

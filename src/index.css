@@ -1,8 +1,11 @@
 :root {
-  --font-stack: 'Barlow Condensed', Helvetica, Arial, sans-serif;
+  --font-stack: 'Google Sans', Helvetica, Arial, sans-serif;
   --shadow-color: hsl(260deg 30% 10% / 0.25);
   --shadow-medium: 2px 4px 4px var(--shadow-color);
-  --font-size: 1.3rem;
+  --font-size: 1rem;
+  --hover-color: hsl(260deg 10% 20%);
+  --hover-text: hsl(260deg 10% 90%);
+  --background-image: url(/assets/images/waldo-images-01.jpeg);
 }
 
 html,
@@ -13,9 +16,14 @@ body {
 body {
   font-family: var(--font-stack);
   font-size: var(--font-size);
+  background-image: var(--background-image);
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-size: 1.5rem;
 }
 
 #root {
   min-height: 100%;
   display: flex;
+  position: relative;
 }

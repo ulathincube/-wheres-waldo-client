@@ -5,3 +5,13 @@
   border: none;
   font-size: inherit;
 }
+
+.context {
+  padding: 10px 20px;
+  width: 100%;
+}
+
+.context:hover {
+  background-color: var(--hover-color);
+  color: var(--hover-text);
+}
