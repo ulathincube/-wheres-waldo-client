@@ -8,13 +8,27 @@ type PostOptions = {
   body: string;
 };
 
-export async function getWallpaper() {
-  try {
-    const response = await fetch(`${API_URL}/wallpapers`);
-    await response.json();
-  } catch (error) {
-    console.log({ error });
-  }
+interface ResponseData {
+  data: {
+    url: string;
+    name: string;
+    id: string;
+    characters: {
+      url: string;
+      name: string;
+      id: string;
+      position_x: number;
+      position_y: number;
+    }[];
+  };
+  message: string;
+  error: unknown;
+}
+
+export async function getWallpaper(): Promise<ResponseData> {
+  const response = await fetch(`${API_URL}/wallpapers`);
+  const data: ResponseData = await response.json();
+  return data;
 }
 
 export async function findCharacter({

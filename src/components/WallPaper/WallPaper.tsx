@@ -1,24 +1,44 @@
 import styles from './WallPaper.module.css';
 
+interface Wallpaper {
+  url: string;
+  name: string;
+  id: string;
+  characters: {
+    url: string;
+    name: string;
+    id: string;
+    position_x: number;
+    position_y: number;
+  }[];
+}
+
 interface Props extends React.PropsWithChildren {
   onShowContextMenu: () => void;
   onHideContextMenu: () => void;
+  wallpaper: Wallpaper | null;
 }
 
-function WallPaper({ onShowContextMenu, onHideContextMenu, children }: Props) {
+function WallPaper({
+  onShowContextMenu,
+  onHideContextMenu,
+  children,
+  wallpaper,
+}: Props) {
+  if (!wallpaper) return;
+  console.log({ wallpaper, onHideContextMenu });
   return (
     <div
       onClick={(event: React.MouseEvent) => {
         event.stopPropagation();
-        console.log('hello!');
       }}
       className={styles.wrapper}
     >
       <figure className={styles.box} onClick={onShowContextMenu}>
         <img
-          src={'/assets/images/wheres-wally-01.webp'}
+          src={wallpaper.url}
           className={styles.image}
-          alt="Where's Waldo?"
+          alt={wallpaper.name}
         />
       </figure>
       {children}

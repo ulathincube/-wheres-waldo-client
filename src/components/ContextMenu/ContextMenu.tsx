@@ -10,7 +10,16 @@ interface ContextStyles extends React.CSSProperties {
 
 const IMAGE_URL = '/assets/images/character-01.webp';
 
+interface Character {
+  url: string;
+  name: string;
+  id: string;
+  position_x: number;
+  position_y: number;
+}
+
 type Props = {
+  characters?: Character[];
   onToastMessageChange: (newMessage: string) => void;
   count: {
     x: number;
@@ -27,6 +36,7 @@ type Props = {
 };
 
 function ContextMenu({
+  characters,
   onToastMessageChange,
   onHideContextMenu,
   position,
