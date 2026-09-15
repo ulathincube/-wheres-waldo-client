@@ -11,6 +11,7 @@ interface ContextStyles extends React.CSSProperties {
 const IMAGE_URL = '/assets/images/character-01.webp';
 
 type Props = {
+  onToastMessageChange: (newMessage: string) => void;
   count: {
     x: number;
     y: number;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 function ContextMenu({
+  onToastMessageChange,
   onHideContextMenu,
   position,
   onChangeCount,
@@ -52,6 +54,7 @@ function ContextMenu({
         // state update, found
       } else {
         // keep looking!
+        onToastMessageChange('Keep looking!');
       }
     } catch (error) {
       console.log({ error });
@@ -86,9 +89,13 @@ function ContextMenu({
           onButtonClick={() => handleOptionClick(2)}
         >
           <span className={styles.caption}>
-            <img className={styles.image} src={IMAGE_URL} alt='Character One' />
+            <img
+              className={styles.image}
+              src={IMAGE_URL.replace('1', '2')}
+              alt='Character One'
+            />
           </span>
-          <span className={styles.option}>Character One</span>
+          <span className={styles.option}>Character Two</span>
         </Button>
       </li>
       <li>
@@ -98,9 +105,13 @@ function ContextMenu({
           onButtonClick={() => handleOptionClick(3)}
         >
           <span className={styles.caption}>
-            <img className={styles.image} src={IMAGE_URL} alt='Character One' />
+            <img
+              className={styles.image}
+              src={IMAGE_URL.replace('1', '3')}
+              alt='Character One'
+            />
           </span>
-          <span className={styles.option}>Character One</span>
+          <span className={styles.option}>Character Three</span>
         </Button>
       </li>
     </ul>

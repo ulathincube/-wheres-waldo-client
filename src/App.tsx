@@ -5,6 +5,7 @@ import Overlay from './components/Overlay';
 import { getWallpaper } from './services/image';
 import Display from './components/Display';
 import Found from './components/Found';
+import Toast from './components/Toast';
 
 function App() {
   const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -15,6 +16,8 @@ function App() {
   const [count, setCount] = useState<
     { x: number; y: number; characterId: number }[]
   >([]);
+
+  const [toastMessage, setToastMessage] = useState<string>('');
 
   useEffect(() => {
     const runEffect = async () => {
@@ -55,23 +58,35 @@ function App() {
     setCount([...count, newCount]);
   }
 
+  function onToastMessageChange(newMessage: string) {
+    setToastMessage(newMessage);
+    setTimeout(() => {
+      setToastMessage('');
+    }, 2000);
+  }
+
   return (
     <>
-      <WallPaper onShowContextMenu={onShowContextMenu} />
-      <Display position={position} />
-      {count.map(countObject => (
-        <Found key={JSON.stringify(countObject)} position={countObject} />
-      ))}
-      {showMenu && <Overlay position={position} />}
-      {}
-      {showMenu && (
-        <ContextMenu
-          count={count}
-          onChangeCount={onChangeCount}
-          position={position}
-          onHideContextMenu={onHideContextMenu}
-        />
-      )}
+      <WallPaper
+        onShowContextMenu={onShowContextMenu}
+        onHideContextMenu={onHideContextMenu}
+      >
+        <Display position={position} />
+        {count.map(countObject => (
+          <Found key={JSON.stringify(countObject)} position={countObject} />
+        ))}
+        {showMenu && <Overlay position={position} />}
+        {showMenu && (
+          <ContextMenu
+            onToastMessageChange={onToastMessageChange}
+            count={count}
+            onChangeCount={onChangeCount}
+            position={position}
+            onHideContextMenu={onHideContextMenu}
+          />
+        )}
+        <Toast message={toastMessage} />
+      </WallPaper>
     </>
   );
 }

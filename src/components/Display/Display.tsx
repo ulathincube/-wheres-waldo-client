@@ -16,12 +16,13 @@ function Display({ position }: Props) {
   const valueX = (position.x - 0.5 * freeSpaceHorizontal) / IMAGE_WIDTH;
   const valueY = (position.y - 0.5 * freeSpaceVertical) / IMAGE_HEIGHT;
 
-  console.log({ valueX, valueY });
+  // console.log({ valueX, valueY });
 
   return (
     <div className={styles.wrapper}>
       <span className={styles.position}>x: {valueX.toFixed(2)}</span>
       <span className={styles.position}>y: {valueY.toFixed(2)}</span>
+      <span className={styles.timer}>0:00</span>
     </div>
   );
 }
