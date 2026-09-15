@@ -1,0 +1,10 @@
+.wrapper {
+  width: var(--overlay-size);
+  height: var(--overlay-size);
+  border-radius: var(--circle-radius);
+  border: 3px var(--border-dotted) var(--black);
+  position: absolute;
+  top: var(--position-y);
+  left: var(--position-x);
+  transform: translate(-50%, -50%);
+}

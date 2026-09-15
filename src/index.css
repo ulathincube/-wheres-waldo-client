@@ -3,9 +3,14 @@
   --shadow-color: hsl(260deg 30% 10% / 0.25);
   --shadow-medium: 2px 4px 4px var(--shadow-color);
   --font-size: 1rem;
-  --hover-color: hsl(260deg 10% 20%);
-  --hover-text: hsl(260deg 10% 90%);
-  --background-image: url(/assets/images/waldo-images-01.jpeg);
+  --hover-color: hsl(260deg 85% 10%);
+  --hover-text: hsl(260deg 10% 90% / 0.7);
+  --background-image: url(/assets/images/wheres-wally-01.webp);
+  --black: hsl(260deg 20% 10%);
+  --border-dotted: dotted;
+  --circle-radius: 50%;
+  --border-radius-small: 5px;
+  --overlay-size: 50px;
 }
 
 html,
@@ -16,10 +21,6 @@ body {
 body {
   font-family: var(--font-stack);
   font-size: var(--font-size);
-  background-image: var(--background-image);
-  background-size: cover;
-  background-repeat: no-repeat;
-  font-size: 1.5rem;
 }
 
 #root {

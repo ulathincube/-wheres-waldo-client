@@ -8,26 +8,42 @@ type PostOptions = {
   body: string;
 };
 
+export async function getWallpaper() {
+  try {
+    const response = await fetch(`${API_URL}/wallpapers`);
+    await response.json();
+  } catch (error) {
+    console.log({ error });
+  }
+}
+
 export async function findCharacter({
-  character,
+  characterId,
   position,
-  imageId,
+  wallpaperId,
+  dimensions,
 }: {
-  character: string;
+  characterId: number;
   position: { x: number; y: number };
-  imageId: number;
+  wallpaperId: number;
+  dimensions: {
+    width: number;
+    height: number;
+  };
 }) {
   const options: PostOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(position),
+    body: JSON.stringify({ position, dimensions }),
   };
   const response = await fetch(
-    `${API_URL}/images/${imageId}/${character}`,
+    `${API_URL}/wallpapers/${wallpaperId}/${characterId}`,
     options,
   );
+
+  console.log(`${API_URL}/wallpapers/${wallpaperId}/${characterId}`);
   if (!response.ok) throw new Error('Error: Request failed!');
   return await response.json();
 }

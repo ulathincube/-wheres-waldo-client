@@ -4,14 +4,16 @@ type Props = {
   children: React.ReactNode;
   onButtonClick: () => void;
   className?: string;
+  disabled?: boolean;
 };
 
-function Button({ children, onButtonClick, className }: Props) {
+function Button({ children, onButtonClick, className, ...delegated }: Props) {
   if (className)
     return (
       <button
         onClick={onButtonClick}
         className={`${styles.button} ${styles[className]}`}
+        {...delegated}
       >
         {children}
       </button>

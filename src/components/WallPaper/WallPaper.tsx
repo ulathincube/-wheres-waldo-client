@@ -1,5 +1,4 @@
 import styles from './WallPaper.module.css';
-import Button from '../Button';
 
 type Props = {
   onShowContextMenu: () => void;
@@ -7,13 +6,15 @@ type Props = {
 
 function WallPaper({ onShowContextMenu }: Props) {
   return (
-    <Button onButtonClick={onShowContextMenu}>
-      {/* <img
-        src='/assets/images/waldo-images-01.jpeg'
-        alt="Where's Waldo 01"
-        className={styles.wallpaper}
-      /> */}
-    </Button>
+    <div className={styles.wrapper}>
+      <figure className={styles.box} onClick={onShowContextMenu}>
+        <img
+          src={'/assets/images/wheres-wally-01.webp'}
+          className={styles.image}
+          alt="Where's Waldo?"
+        />
+      </figure>
+    </div>
   );
 }
 
