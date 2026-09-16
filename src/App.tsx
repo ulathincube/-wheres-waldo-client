@@ -3,7 +3,6 @@ import ContextMenu from './components/ContextMenu';
 import { useState, useEffect } from 'react';
 import Overlay from './components/Overlay';
 import { getWallpaper, completeGame } from './services/image';
-import { saveUser } from './services/leaderboard';
 import Display from './components/Display';
 import Found from './components/Found';
 import Toast from './components/Toast';
@@ -59,7 +58,7 @@ function App() {
       const runEffect = async () => {
         const data = await completeGame(wallpaper!.id);
         console.log({ data });
-        setShowInputForm(true);
+        onShowInputForm();
       };
 
       runEffect();
@@ -138,6 +137,14 @@ function App() {
     }, 2000);
   }
 
+  function onShowInputForm() {
+    setShowInputForm(true);
+  }
+
+  function onHideInputForm() {
+    setShowInputForm(false);
+  }
+
   return (
     <>
       <WallPaper
@@ -166,7 +173,7 @@ function App() {
         )}
         <Toast message={toastMessage} />
       </WallPaper>
-      {showInputForm && <InputForm />}
+      {showInputForm && <InputForm onHideInputForm={onHideInputForm} />}
     </>
   );
 }
