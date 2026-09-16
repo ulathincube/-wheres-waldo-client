@@ -2,7 +2,7 @@ import WallPaper from './components/WallPaper';
 import ContextMenu from './components/ContextMenu';
 import { useState, useEffect } from 'react';
 import Overlay from './components/Overlay';
-import { getWallpaper } from './services/image';
+import { getWallpaper, completeGame } from './services/image';
 import Display from './components/Display';
 import Found from './components/Found';
 import Toast from './components/Toast';
@@ -51,10 +51,17 @@ function App() {
     ((position.y - 0.5 * freeSpaceVertical) / IMAGE_HEIGHT).toFixed(2),
   );
 
-  console.log({ freeSpaceHorizontal, freeSpaceVertical, valueX, valueY });
-
   useEffect(() => {
-    if (foundCharacters === 3) return;
+    if (foundCharacters === 3) {
+      const runEffect = async () => {
+        const data = await completeGame(wallpaper!.id);
+        console.log({ data });
+      };
+
+      runEffect();
+      // api request => game complete
+      return;
+    }
 
     const intervalId = setInterval(() => {
       onChangeCounter(counterSeconds + 1);
@@ -63,7 +70,7 @@ function App() {
     return () => {
       clearInterval(intervalId);
     };
-  }, [counterSeconds, foundCharacters]);
+  }, [counterSeconds, foundCharacters, wallpaper]);
 
   useEffect(() => {
     const runEffect = async () => {
