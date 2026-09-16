@@ -21,12 +21,12 @@ interface Props extends React.PropsWithChildren {
 
 function WallPaper({
   onShowContextMenu,
-  onHideContextMenu,
+  // onHideContextMenu,
   children,
   wallpaper,
 }: Props) {
   if (!wallpaper) return;
-  console.log({ wallpaper, onHideContextMenu });
+
   return (
     <div
       onClick={(event: React.MouseEvent) => {

@@ -8,8 +8,6 @@ interface ContextStyles extends React.CSSProperties {
   '--position-y': string;
 }
 
-const IMAGE_URL = '/assets/images/character-01.webp';
-
 interface Character {
   url: string;
   name: string;
@@ -20,6 +18,8 @@ interface Character {
 
 type Props = {
   characters?: Character[];
+  onChangeFoundCharacters: () => void;
+  imageId?: string;
   onToastMessageChange: (newMessage: string) => void;
   count: {
     x: number;
@@ -33,43 +33,52 @@ type Props = {
     y: number;
     characterId: number;
   }) => void;
+  normalizedPosition: {
+    x: number;
+    y: number;
+  };
+  onChangeCounter: (newCounter: number) => void;
 };
 
 function ContextMenu({
+  imageId,
   characters,
+  onChangeFoundCharacters,
   onToastMessageChange,
   onHideContextMenu,
   position,
   onChangeCount,
   count,
+  normalizedPosition,
+  onChangeCounter,
 }: Props) {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  async function handleOptionClick(characterId: number) {
+  async function handleOptionClick(characterId: string, wallpaperId: string) {
+    // console.log({ valueX, valueY });
     onHideContextMenu();
     try {
       const result = await findCharacter({
         characterId,
-        position,
-        wallpaperId: 1,
-        dimensions: {
-          width,
-          height,
-        },
+        position: normalizedPosition,
+        wallpaperId,
       });
       if (result.data) {
         // fix characterId
         onChangeCount({ ...position, characterId: 1 });
+        onChangeFoundCharacters();
+
         // state update, found
       } else {
         // keep looking!
         onToastMessageChange('Keep looking!');
       }
+      onChangeCounter(result.counter);
     } catch (error) {
       console.log({ error });
     }
   }
+
+  if (!imageId) return;
+
   return (
     <ul
       className={styles.wrapper}
@@ -80,7 +89,7 @@ function ContextMenu({
         } as ContextStyles
       }
     >
-      <li>
+      {/* <li>
         <Button
           disabled={includesValue(count, 1)}
           className='context'
@@ -91,39 +100,24 @@ function ContextMenu({
           </span>
           <span className={styles.option}>Character One</span>
         </Button>
-      </li>
-      <li>
-        <Button
-          disabled={includesValue(count, 2)}
-          className='context'
-          onButtonClick={() => handleOptionClick(2)}
-        >
-          <span className={styles.caption}>
-            <img
-              className={styles.image}
-              src={IMAGE_URL.replace('1', '2')}
-              alt='Character One'
-            />
-          </span>
-          <span className={styles.option}>Character Two</span>
-        </Button>
-      </li>
-      <li>
-        <Button
-          disabled={includesValue(count, 3)}
-          className='context'
-          onButtonClick={() => handleOptionClick(3)}
-        >
-          <span className={styles.caption}>
-            <img
-              className={styles.image}
-              src={IMAGE_URL.replace('1', '3')}
-              alt='Character One'
-            />
-          </span>
-          <span className={styles.option}>Character Three</span>
-        </Button>
-      </li>
+      </li> */}
+      {characters?.map(characterObject => (
+        <li key={characterObject.id} className={styles.item}>
+          <Button
+            className='context'
+            onButtonClick={() => handleOptionClick(characterObject.id, imageId)}
+          >
+            <span className={styles.caption}>
+              <img
+                className={styles.image}
+                src={characterObject.url}
+                alt={characterObject.name}
+              />
+            </span>
+            <span className={styles.option}>{characterObject.name}</span>
+          </Button>
+        </li>
+      ))}
     </ul>
   );
 }

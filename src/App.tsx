@@ -7,6 +7,9 @@ import Display from './components/Display';
 import Found from './components/Found';
 import Toast from './components/Toast';
 
+const IMAGE_WIDTH = 1152;
+const IMAGE_HEIGHT = 648;
+
 interface WallpaperData {
   url: string;
   name: string;
@@ -32,13 +35,41 @@ function App() {
     { x: number; y: number; characterId: number }[]
   >([]);
   const [wallpaper, setWallpaper] = useState<WallPaper>(null);
-
   const [toastMessage, setToastMessage] = useState<string>('');
+  const [counterSeconds, setCounterSeconds] = useState<number>(0);
+  const [foundCharacters, setFoundCharacters] = useState<number>(0);
+
+  const { innerHeight, innerWidth } = window;
+  const freeSpaceHorizontal = innerWidth - IMAGE_WIDTH;
+  const freeSpaceVertical = innerHeight - IMAGE_HEIGHT;
+
+  const valueX = Number(
+    ((position.x - 0.5 * freeSpaceHorizontal) / IMAGE_WIDTH).toFixed(2),
+  );
+
+  const valueY = Number(
+    ((position.y - 0.5 * freeSpaceVertical) / IMAGE_HEIGHT).toFixed(2),
+  );
+
+  console.log({ freeSpaceHorizontal, freeSpaceVertical, valueX, valueY });
+
+  useEffect(() => {
+    if (foundCharacters === 3) return;
+
+    const intervalId = setInterval(() => {
+      onChangeCounter(counterSeconds + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [counterSeconds, foundCharacters]);
 
   useEffect(() => {
     const runEffect = async () => {
       try {
-        const { data } = await getWallpaper();
+        const { data, counter } = await getWallpaper();
+        setCounterSeconds(counter);
         setWallpaper(data);
       } catch (error: unknown) {
         if (error instanceof Error) throw error;
@@ -54,6 +85,7 @@ function App() {
       //   x: event.clientX / window.innerWidth,
       //   y: event.clientY / window.innerHeight,
       // });
+
       setPosition({ x: event.clientX, y: event.clientY });
     }
     window.addEventListener('mousemove', onMouseMove);
@@ -71,12 +103,21 @@ function App() {
     setShowMenu(false);
   }
 
+  function onChangeFoundCharacters() {
+    const nextCount = foundCharacters + 1;
+    setFoundCharacters(nextCount);
+  }
+
   function onChangeCount(newCount: {
     x: number;
     y: number;
     characterId: number;
   }) {
     setCount([...count, newCount]);
+  }
+
+  function onChangeCounter(newCounter: number) {
+    setCounterSeconds(newCounter);
   }
 
   function onToastMessageChange(newMessage: string) {
@@ -93,19 +134,23 @@ function App() {
         onShowContextMenu={onShowContextMenu}
         onHideContextMenu={onHideContextMenu}
       >
-        <Display position={position} />
+        <Display counter={counterSeconds} position={position} />
         {count.map(countObject => (
           <Found key={JSON.stringify(countObject)} position={countObject} />
         ))}
         {showMenu && <Overlay position={position} />}
         {showMenu && (
           <ContextMenu
+            onChangeFoundCharacters={onChangeFoundCharacters}
+            normalizedPosition={{ x: valueX, y: valueY }}
             characters={wallpaper?.characters}
+            imageId={wallpaper?.id}
             onToastMessageChange={onToastMessageChange}
             count={count}
             onChangeCount={onChangeCount}
             position={position}
             onHideContextMenu={onHideContextMenu}
+            onChangeCounter={onChangeCounter}
           />
         )}
         <Toast message={toastMessage} />

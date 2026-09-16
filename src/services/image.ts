@@ -23,6 +23,7 @@ interface ResponseData {
   };
   message: string;
   error: unknown;
+  counter: number;
 }
 
 export async function getWallpaper(): Promise<ResponseData> {
@@ -35,22 +36,17 @@ export async function findCharacter({
   characterId,
   position,
   wallpaperId,
-  dimensions,
 }: {
-  characterId: number;
+  characterId: string;
   position: { x: number; y: number };
-  wallpaperId: number;
-  dimensions: {
-    width: number;
-    height: number;
-  };
+  wallpaperId: string;
 }) {
   const options: PostOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ position, dimensions }),
+    body: JSON.stringify({ position }),
   };
   const response = await fetch(
     `${API_URL}/wallpapers/${wallpaperId}/${characterId}`,
