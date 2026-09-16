@@ -3,9 +3,11 @@ import ContextMenu from './components/ContextMenu';
 import { useState, useEffect } from 'react';
 import Overlay from './components/Overlay';
 import { getWallpaper, completeGame } from './services/image';
+import { saveUser } from './services/leaderboard';
 import Display from './components/Display';
 import Found from './components/Found';
 import Toast from './components/Toast';
+import InputForm from './components/InputForm';
 
 const IMAGE_WIDTH = 1152;
 const IMAGE_HEIGHT = 648;
@@ -38,6 +40,7 @@ function App() {
   const [toastMessage, setToastMessage] = useState<string>('');
   const [counterSeconds, setCounterSeconds] = useState<number>(0);
   const [foundCharacters, setFoundCharacters] = useState<number>(0);
+  const [showInputForm, setShowInputForm] = useState<boolean>(false);
 
   const { innerHeight, innerWidth } = window;
   const freeSpaceHorizontal = innerWidth - IMAGE_WIDTH;
@@ -56,6 +59,7 @@ function App() {
       const runEffect = async () => {
         const data = await completeGame(wallpaper!.id);
         console.log({ data });
+        setShowInputForm(true);
       };
 
       runEffect();
@@ -162,6 +166,7 @@ function App() {
         )}
         <Toast message={toastMessage} />
       </WallPaper>
+      {showInputForm && <InputForm />}
     </>
   );
 }
