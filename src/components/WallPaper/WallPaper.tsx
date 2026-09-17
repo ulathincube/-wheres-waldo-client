@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styles from './WallPaper.module.css';
 
 interface Wallpaper {
@@ -46,4 +47,4 @@ function WallPaper({
   );
 }
 
-export default WallPaper;
+export default memo(WallPaper);

@@ -1,0 +1,53 @@
+.wrapper {
+  height: 100%;
+  background-color: hsl(0deg 0% 90%);
+  width: 300px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 15px;
+  animation: slide-in 500ms ease-out forwards;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+}
+
+.hide {
+  padding: 10px 20px;
+  background-color: transparent;
+  color: black;
+  border: 1px solid black;
+  text-transform: uppercase;
+}
+
+.leaderboard {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 90%;
+  margin-bottom: 50px;
+}
+
+.data,
+.header {
+  padding: 2.5px;
+  vertical-align: top;
+}
+
+.header {
+  text-align: left;
+}
+
+.data {
+  text-align: right;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

@@ -1,4 +1,5 @@
 import styles from './Found.module.css';
+import { memo } from 'react';
 
 type Props = {
   position: { x: number; y: number };
@@ -40,4 +41,4 @@ function Found({ position }: Props) {
   );
 }
 
-export default Found;
+export default memo(Found);

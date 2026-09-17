@@ -1,7 +1,7 @@
 import styles from './ContextMenu.module.css';
 import Button from '../Button';
 import { findCharacter } from '../../services/image';
-import includesValue from '../../utils/includesValue';
+import { memo } from 'react';
 
 interface ContextStyles extends React.CSSProperties {
   '--position-x': string;
@@ -71,7 +71,7 @@ function ContextMenu({
         // keep looking!
         onToastMessageChange('Keep looking!');
       }
-      onChangeCounter(result.counter);
+      // onChangeCounter(result.counter);
     } catch (error) {
       console.log({ error });
     }
@@ -89,18 +89,6 @@ function ContextMenu({
         } as ContextStyles
       }
     >
-      {/* <li>
-        <Button
-          disabled={includesValue(count, 1)}
-          className='context'
-          onButtonClick={() => handleOptionClick(1)}
-        >
-          <span className={styles.caption}>
-            <img className={styles.image} src={IMAGE_URL} alt='Character One' />
-          </span>
-          <span className={styles.option}>Character One</span>
-        </Button>
-      </li> */}
       {characters?.map(characterObject => (
         <li key={characterObject.id} className={styles.item}>
           <Button
@@ -122,4 +110,4 @@ function ContextMenu({
   );
 }
 
-export default ContextMenu;
+export default memo(ContextMenu);

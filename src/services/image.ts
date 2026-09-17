@@ -1,13 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-type PostOptions = {
-  method: string;
-  headers: {
-    'Content-Type': string;
-  };
-  body: string;
-};
-
 interface ResponseData {
   data: {
     url: string;
@@ -34,7 +26,10 @@ interface CompletGameRespnse {
 }
 
 export async function getWallpaper(): Promise<ResponseData> {
-  const response = await fetch(`${API_URL}/wallpapers`);
+  const response = await fetch(`${API_URL}/wallpapers`, {
+    method: 'GET',
+    credentials: 'include',
+  });
   const data: ResponseData = await response.json();
   return data;
 }
@@ -48,8 +43,9 @@ export async function findCharacter({
   position: { x: number; y: number };
   wallpaperId: string;
 }) {
-  const options: PostOptions = {
+  const options: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -67,16 +63,17 @@ export async function findCharacter({
 
 export async function completeGame(
   wallpaperId: string,
+  completionTime: number,
 ): Promise<CompletGameRespnse> {
-  const options: PostOptions = {
+  const options: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      data: {
-        foundCharacters: 3,
-      },
+      foundCharacters: 3,
+      completionTime,
     }),
   };
   const response = await fetch(

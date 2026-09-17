@@ -1,7 +1,8 @@
 import styles from './InputForm.module.css';
 import { createPortal } from 'react-dom';
-import { saveUser } from '../../services/leaderboard';
+import { saveUser } from '../../services/user';
 import { useState, type ChangeEvent } from 'react';
+import { memo } from 'react';
 
 const container: HTMLElement | null = document.getElementById('modal');
 
@@ -59,4 +60,4 @@ function InputForm({ onHideInputForm }: Props) {
   );
 }
 
-export default InputForm;
+export default memo(InputForm);

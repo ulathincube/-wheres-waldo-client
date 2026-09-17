@@ -1,12 +1,13 @@
 import WallPaper from './components/WallPaper';
 import ContextMenu from './components/ContextMenu';
-import { useState, useEffect } from 'react';
-import Overlay from './components/Overlay';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getWallpaper, completeGame } from './services/image';
 import Display from './components/Display';
 import Found from './components/Found';
 import Toast from './components/Toast';
 import InputForm from './components/InputForm';
+import LeaderBoard from './components/LeaderBoard';
+import ShowBoard from './components/ShowBoard';
 
 const IMAGE_WIDTH = 1152;
 const IMAGE_HEIGHT = 648;
@@ -40,6 +41,10 @@ function App() {
   const [counterSeconds, setCounterSeconds] = useState<number>(0);
   const [foundCharacters, setFoundCharacters] = useState<number>(0);
   const [showInputForm, setShowInputForm] = useState<boolean>(false);
+  const [showLeaderBoard, setShowLeaderBoard] = useState<boolean>(false);
+
+  const cachedShowInputForm = useCallback(() => setShowInputForm(true), []);
+  const cachedHideInputForm = useCallback(() => setShowInputForm(false), []);
 
   const { innerHeight, innerWidth } = window;
   const freeSpaceHorizontal = innerWidth - IMAGE_WIDTH;
@@ -56,9 +61,9 @@ function App() {
   useEffect(() => {
     if (foundCharacters === 3) {
       const runEffect = async () => {
-        const data = await completeGame(wallpaper!.id);
+        const data = await completeGame(wallpaper!.id, counterSeconds);
         console.log({ data });
-        onShowInputForm();
+        cachedShowInputForm();
       };
 
       runEffect();
@@ -73,13 +78,15 @@ function App() {
     return () => {
       clearInterval(intervalId);
     };
-  }, [counterSeconds, foundCharacters, wallpaper]);
+  }, [counterSeconds, foundCharacters, wallpaper, cachedShowInputForm]);
 
   useEffect(() => {
     const runEffect = async () => {
       try {
         const { data, counter } = await getWallpaper();
-        setCounterSeconds(counter);
+        const timeElapsed = Date.now() - counter;
+        const timeElapsedInSeconds = Math.round(timeElapsed / 1000);
+        setCounterSeconds(timeElapsedInSeconds);
         setWallpaper(data);
       } catch (error: unknown) {
         if (error instanceof Error) throw error;
@@ -91,11 +98,6 @@ function App() {
   useEffect(() => {
     if (showMenu) return;
     function onMouseMove(event: MouseEvent) {
-      // console.log({
-      //   x: event.clientX / window.innerWidth,
-      //   y: event.clientY / window.innerHeight,
-      // });
-
       setPosition({ x: event.clientX, y: event.clientY });
     }
     window.addEventListener('mousemove', onMouseMove);
@@ -105,18 +107,20 @@ function App() {
     };
   }, [showMenu]);
 
-  function onShowContextMenu() {
-    setShowMenu(true);
-  }
+  const cachedShowContextMenu = useCallback(() => setShowMenu(true), []);
 
-  function onHideContextMenu() {
-    setShowMenu(false);
-  }
+  const cachedHideContextMenu = useCallback(() => setShowMenu(false), []);
 
-  function onChangeFoundCharacters() {
+  const cachedShowLeaderBoard = useCallback(() => setShowLeaderBoard(true), []);
+  const cachedHideLeaderBoard = useCallback(
+    () => setShowLeaderBoard(false),
+    [],
+  );
+
+  const cachedOnChangeFoundCharacters = useCallback(() => {
     const nextCount = foundCharacters + 1;
     setFoundCharacters(nextCount);
-  }
+  }, [foundCharacters]);
 
   function onChangeCount(newCount: {
     x: number;
@@ -130,50 +134,52 @@ function App() {
     setCounterSeconds(newCounter);
   }
 
-  function onToastMessageChange(newMessage: string) {
+  const cachedOnToastMessageChange = useCallback((newMessage: string) => {
     setToastMessage(newMessage);
     setTimeout(() => {
       setToastMessage('');
     }, 2000);
-  }
+  }, []);
 
-  function onShowInputForm() {
-    setShowInputForm(true);
-  }
+  const cachedWallpaper = useMemo(() => wallpaper, [wallpaper]);
+  const cachedNormalizedPosition = useMemo(() => {
+    return { x: valueX, y: valueY };
+  }, [valueX, valueY]);
 
-  function onHideInputForm() {
-    setShowInputForm(false);
-  }
+  // console.log({ counterSeconds });
 
   return (
     <>
+      <ShowBoard onShowBoard={cachedShowLeaderBoard} />
       <WallPaper
-        wallpaper={wallpaper}
-        onShowContextMenu={onShowContextMenu}
-        onHideContextMenu={onHideContextMenu}
+        wallpaper={cachedWallpaper}
+        onShowContextMenu={cachedShowContextMenu}
+        onHideContextMenu={cachedHideContextMenu}
       >
-        <Display counter={counterSeconds} position={position} />
+        <Display counter={counterSeconds} />
         {count.map(countObject => (
           <Found key={JSON.stringify(countObject)} position={countObject} />
         ))}
-        {showMenu && <Overlay position={position} />}
+        {/* {showMenu && <Overlay position={position} />} */}
         {showMenu && (
           <ContextMenu
-            onChangeFoundCharacters={onChangeFoundCharacters}
-            normalizedPosition={{ x: valueX, y: valueY }}
+            onChangeFoundCharacters={cachedOnChangeFoundCharacters}
+            normalizedPosition={cachedNormalizedPosition}
             characters={wallpaper?.characters}
             imageId={wallpaper?.id}
-            onToastMessageChange={onToastMessageChange}
+            onToastMessageChange={cachedOnToastMessageChange}
             count={count}
             onChangeCount={onChangeCount}
             position={position}
-            onHideContextMenu={onHideContextMenu}
+            onHideContextMenu={cachedHideContextMenu}
             onChangeCounter={onChangeCounter}
           />
         )}
+
         <Toast message={toastMessage} />
       </WallPaper>
-      {showInputForm && <InputForm onHideInputForm={onHideInputForm} />}
+      {showLeaderBoard && <LeaderBoard onHideBoard={cachedHideLeaderBoard} />}
+      {showInputForm && <InputForm onHideInputForm={cachedHideInputForm} />}
     </>
   );
 }
